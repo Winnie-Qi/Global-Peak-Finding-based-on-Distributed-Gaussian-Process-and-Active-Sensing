@@ -6,21 +6,28 @@
 clc;
 close all;
 clear all;
-InputSpace = {linspace(-4, 4, 100); linspace(-4, 4, 100)};
 
 %% The parameters here can be modified by the users
 
-S = 7; % The number of stationary sensors is S*S
-A = 10; % The number of moving agents is A
+S = 6; % The number of stationary sensors is S*S£¬corresponds to traing points density
 r = 1.8; % The range of communication with surrounding sensors
+a = 50; % test points density
+E = 50;
 
 %% Show the environment
 
-ShowEnvironment3D(InputSpace);
-ShowTopDownView(InputSpace);
+InputSpace = {linspace(-4, 4, a); linspace(-4, 4, a)};
+% ShowEnvironment3D(InputSpace);
+% ShowTopDownView(InputSpace);
 
 %% Compute the eigenfunctions and eigenvalues of Inputspace
-[Eigenfunctions, Eigenvalues] = ComputeEigen(InputSpace);
+% [Eigenfunctions, Eigenvalues] = ComputeEigen(InputSpace);
+PHI = zeros(a^4,E);
+for s = InputSpace{1}
+    for t = InputSpace{2}
+        for e = 1:E
+            PHI() = 
+
 
 %% Stationary sensors
 
@@ -38,6 +45,6 @@ y_s = y_s(:);
 %% Moving agents
 
 % Spawn the agents at random initial locations
-AgentLocation = rand(A,2)*8 - 4;
+% AgentLocation = rand(A,2)*8 - 4;
 
 % for d = 1:2
