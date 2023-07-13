@@ -20,7 +20,7 @@ for i =1:n-1
     end
 end
 G = digraph(Adj);
-figure
+figure(2)
 plot(G,'XData',locations(:,1),'YData',locations(:,2));
 xlim([-4 4]);
 ylim([-4 4]);
