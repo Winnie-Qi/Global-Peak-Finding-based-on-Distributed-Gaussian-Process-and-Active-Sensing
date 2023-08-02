@@ -15,7 +15,7 @@ E = 40;
 sigma = 0.0001;
 M = 20; % iteration times
 SHOW = 10; % show the result of the Sth sensor
-gamma = 0.7;
+gamma = 0.8;
 v = 0.05;
 l = 0.05;
 interval = 1;
@@ -51,9 +51,9 @@ end
 InputSpace_train = {linspace(-3.5, 3.5, S);linspace(-3.5, 3.5, S)};
 [train_x, train_y] = meshgrid(linspace(-3.5, 3.5, S));
 StationarySensors = zeros(S*S, 2);
-train_x = train_x';train_y = train_y';
-StationarySensors(:, 1) = train_x(:)';
-StationarySensors(:, 2) = train_y(:)';
+tmp_x = train_x';tmp_y = train_y';
+StationarySensors(:, 1) = tmp_x(:)';
+StationarySensors(:, 2) = tmp_y(:)';
 Adj = BuildAdj(StationarySensors, r); % Adjacency matrix
 y_s = f(train_x, train_y) + sigma*randn(S,S);
 y_s = y_s(:);
@@ -103,9 +103,9 @@ while m <= M
         figure(m+10)
         pcolor(reshape(f_E{SHOW},a,a));        
         colorbar
-        figure(m+100)
-        pcolor(reshape(diag(Pi_E{SHOW}),a,a));        
-        colorbar
+%         figure(m+100)
+%         pcolor(reshape(diag(Pi_E{SHOW}),a,a));        
+%         colorbar
     end
     m = m+1;
 end
