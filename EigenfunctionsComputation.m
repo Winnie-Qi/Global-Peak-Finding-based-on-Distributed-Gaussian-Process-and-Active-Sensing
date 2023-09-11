@@ -9,8 +9,8 @@ clear all;
 % The parameters here can be modified by the users
 InputSpace = {linspace(-4, 4, 100); linspace(-4, 4, 100)}; % please change line73 if you modify InputSpace
 PercentageOfVarianceToBeCaptured = 0.96;
-v=0.05;
-l=0.05;
+v=0.001;
+l=0.001;
 
 n_input = numel(InputSpace{1});
 kernels = zeros(n_input);

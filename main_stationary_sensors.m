@@ -11,13 +11,13 @@ clear all;
 S = 10; % The number of stationary sensors is S*S£¬corresponds to traing points density
 r = 1.0; % The range of communication with surrounding sensors
 a = 100; % test points density
-E = 40;
+E = 100;
 sigma = 0.0001;
-M = 20; % iteration times
+M = 18; % iteration times
 SHOW = 10; % show the result of the Sth sensor
 gamma = 0.7;
-v = 0.05;
-l = 0.05;
+v = 0.01;
+l = 0.01;
 interval = 1;
 
 % Show the environment
@@ -37,32 +37,36 @@ LAMBDA = diag(Eigenvalues(1:E));
 
 % kernel of test points
 K = zeros(a*a);
-[tmp_x, tmp_y] = meshgrid(linspace(-4, 4, a));
-tmp_x = tmp_x(:);
-tmp_y = tmp_y(:);
+[tmp_xx, tmp_yy] = meshgrid(linspace(-4, 4, a));
+tmp_x = tmp_xx(:);
+tmp_y = tmp_yy(:);
 for i = 1:a*a
     for j = 1:a*a        
         distance = sqrt((tmp_x(i) - tmp_x(j))^2 + (tmp_y(i) - tmp_y(j))^2);
-        K(i,j) = exp(-0.5*distance^2/v)*l+6;
+        K(i,j) = exp(-0.5*distance^2/v)*l+11;
     end
 end
 
 % Initialize the stationary sensors
 InputSpace_train = {linspace(-3.5, 3.5, S);linspace(-3.5, 3.5, S)};
-[train_x, train_y] = meshgrid(linspace(-3.5, 3.5, S));
+[train_x, train_y] = meshgrid(InputSpace_train{1},InputSpace_train{2});
 StationarySensors = zeros(S*S, 2);
-train_x = train_x';train_y = train_y';
+% train_x = train_x';train_y = train_y';
 StationarySensors(:, 1) = train_x(:)';
 StationarySensors(:, 2) = train_y(:)';
 Adj = BuildAdj(StationarySensors, r); % Adjacency matrix
-y_s = f(train_x, train_y) + sigma*randn(S,S);
+y_s = f(train_x, train_y) + sigma*randn(size(train_x));
 y_s = y_s(:);
 
 if 1 % if you wannt to see the distributed result here  
     G = Find_Eigenfunctions_by_LUT(InputSpace_train,E);
     f_E_central = PHI * pinv(G'*G/S^2+sigma^2/S^2*pinv(LAMBDA)) * G'/S^2*y_s; 
     figure(3)
-    pcolor(reshape(f_E_central,a,a));
+    pcolor(tmp_xx,tmp_yy,reshape(f_E_central,a,a));
+    colorbar
+    k = K - PHI * pinv(G'*G/S^2+sigma^2/S^2*pinv(LAMBDA)) * G'/S *G *LAMBDA*PHI'; 
+    figure(4)
+    pcolor(tmp_xx,tmp_yy,reshape(diag(k),a,a));
     colorbar
 end
 
@@ -100,12 +104,14 @@ while m <= M
     beta = beta - gamma*tran*beta;
     % plot
     if mod(m,interval) == 0
-        figure(m+10)
-        pcolor(reshape(f_E{SHOW},a,a));        
+        figure(m+10)        
+        pcolor(tmp_xx,tmp_yy,reshape(f_E{SHOW},a,a));
         colorbar
+        shading flat
         figure(m+100)
-        pcolor(reshape(diag(Pi_E{SHOW}),a,a));        
+        pcolor(tmp_xx,tmp_yy,reshape(diag(Pi_E{SHOW}),a,a));                
         colorbar
+        shading flat
     end
     m = m+1;
 end
