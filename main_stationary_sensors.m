@@ -32,7 +32,11 @@ Eig_LUT = Eigenfunctions;
 InputSpace_LUT = InputSpace;
 
 % Find the eigenfunctions and eigenvalues of Inputspace_test
-PHI = Find_Eigenfunctions_by_LUT(InputSpace_test,E);
+[test_x, test_y] = meshgrid(InputSpace_test{1},InputSpace_test{2});
+TestPoints = zeros(a*a, 2);
+TestPoints(:, 1) = test_x(:)';
+TestPoints(:, 2) = test_y(:)';
+PHI = Find_Eigenfunctions_by_LUT(TestPoints,E);
 LAMBDA = diag(Eigenvalues(1:E));
 
 % kernel of test points
@@ -48,18 +52,19 @@ for i = 1:a*a
 end
 
 % Initialize the stationary sensors
-InputSpace_train = {linspace(-3.5, 3.5, S);linspace(-3.5, 3.5, S)};
+InputSpace_train = {linspace(-2.5, 2.5, S);linspace(-2.5, 2.5, S)};
 [train_x, train_y] = meshgrid(InputSpace_train{1},InputSpace_train{2});
 StationarySensors = zeros(S*S, 2);
 % train_x = train_x';train_y = train_y';
 StationarySensors(:, 1) = train_x(:)';
 StationarySensors(:, 2) = train_y(:)';
-Adj = BuildAdj(StationarySensors, r); % Adjacency matrix
+[Adj, tran] = BuildAdj(StationarySensors, r); % Adjacency matrix
 y_s = f(train_x, train_y) + sigma*randn(size(train_x));
 y_s = y_s(:);
 
 if 1 % if you wannt to see the distributed result here  
-    G = Find_Eigenfunctions_by_LUT(InputSpace_train,E);
+%     G = Find_Eigenfunctions_by_LUT(InputSpace_train,E);
+    G = Find_Eigenfunctions_by_LUT(StationarySensors,E);
     f_E_central = PHI * pinv(G'*G/S^2+sigma^2/S^2*pinv(LAMBDA)) * G'/S^2*y_s; 
     figure(3)
     pcolor(tmp_xx,tmp_yy,reshape(f_E_central,a,a));
@@ -71,20 +76,17 @@ if 1 % if you wannt to see the distributed result here
 end
 
 % Intialize alpha and beta
-alpha = zeros(S*S,E*E); % 每个sensor是(1,E*E)
-beta = zeros(S*S,E); % 每个sensor是(1,E)
+alpha = zeros(S*S,E*E); % (1,E*E) every sensor
+beta = zeros(S*S,E); % (1,E) every sensor
 for i = 1:S
     for j = 1:S
         n = (i-1)*S+j;
-        phi = Find_Eigenfunctions_by_LUT({InputSpace_train{1}(i);InputSpace_train{2}(j)},E);
+        phi = Find_Eigenfunctions_by_LUT([InputSpace_train{1}(i),InputSpace_train{2}(j)],E);
         tmp = phi' * phi;
         alpha(n,:) = tmp(:);
         beta(n,:) = phi' * y_s(n);
     end
 end
-
-% transition matrix
-tran = eye(S*S) - Adj;
 
 % Start iteration
 f_E = cell(S*S,1);
