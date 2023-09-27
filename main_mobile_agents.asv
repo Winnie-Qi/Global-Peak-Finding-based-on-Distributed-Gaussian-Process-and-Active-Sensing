@@ -24,12 +24,12 @@ l = 0.01;
 rng(2)
 
 figure(1)
-% subplot(4,S,[1,2,3,1+S,2+S,3+S]);
-% % Show the environment
+subplot(4,S,[1,2,3,1+S,2+S,3+S]);
+% Show the environment
 InputSpace_test = {linspace(-4, 4, a); linspace(-4, 4, a)};
-% ShowEnvironment3D(InputSpace_test);
-% subplot(4,S,[4,5,6,4+S,5+S,6+S]);
-% ShowTopDownView(InputSpace_test);
+ShowEnvironment3D(InputSpace_test);
+subplot(4,S,[4,5,6,4+S,5+S,6+S]);
+ShowTopDownView(InputSpace_test);
 
 % Load pre-computed LUT 
 load mat/InputSpace_(-4,4,100)_E_463.mat
@@ -66,7 +66,7 @@ while any(distances < safe_distance)
     StartAgents = rand(S, 2) * 8 - 4; 
     distances = pdist(StartAgents); % Regenerate positions
 end
-% z = ones(S,1) * 15;
+z = ones(S,1) * 15;
 MovingAgents = StartAgents;
 
 % hold on
@@ -110,8 +110,8 @@ boundary_check = @(coord, dim, op) op*(coord(:,dim) + op*boundary_offset) <= 0;
 v = zeros(S,2);
 
 % main loop
-while k <= k_max        
-    [distances,tran] = BuildAdj(MovingAgents, r, InputSpace_test, S);    
+while k <= k_max
+    [distances,tran] = BuildAdj(MovingAgents, r, S);
     u_b = zeros(S,2); % boundary condition
     u_c = zeros(S,2); % collision condition
     u_g = zeros(S,2); % goal oriented

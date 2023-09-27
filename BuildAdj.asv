@@ -1,4 +1,4 @@
-function [distances, tran] = BuildAdj(locations,r,InputSpace_test,S)
+function [distances, tran] = BuildAdj(locations,r, S, h2)
 % BuildAdj - To compute the adjacency matrix for each agent and plot
 % Inputs:
 %   locations - (n, 2)matrix, S is the number of sensors/agents, (x,y)
@@ -6,8 +6,7 @@ function [distances, tran] = BuildAdj(locations,r,InputSpace_test,S)
 %   r - The range of communication with surrounding sensors
 % Output:
 %   Adj - The adjacency matrix of the communication network
-subplot(4,S,[4,5,6,4+S,5+S,6+S]);
-ShowTopDownView(InputSpace_test);
+hold(p,'on')
 n = size(locations,1); % number of agents/sensors
 Adj = zeros(n);% adjacency matrix with all initial values of 0
 distances = zeros(n);
@@ -30,12 +29,8 @@ end
 tran = diag(pre_tran) - Adj;
 G = digraph(Adj);
 % figure(3)
+subplot(4,S,[4,5,6,4+S,5+S,6+S]);
 plot(G,'XData',locations(:,1),'YData',locations(:,2));
 xlim([-4 4]);
 ylim([-4 4]); 
 % title('Communication Network');
-z = ones(S,1) * 15;
-subplot(4,S,[1,2,3,1+S,2+S,3+S]);
-ShowEnvironment3D(InputSpace_test);
-plot(G,'XData',locations(:,1),'YData',locations(:,2),'ZData',z);
-hold off
