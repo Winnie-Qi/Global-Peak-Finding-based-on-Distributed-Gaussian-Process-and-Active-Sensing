@@ -20,7 +20,7 @@ for i =1:n-1
             Adj(i,j)=1;
             Adj(j,i)=1;
             pre_tran(1,i)=1;
-            if d <= 0.5
+            if d <= 0.6
                 distances(i,j)=1;
                 distances(j,i)=1;
             end

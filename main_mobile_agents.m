@@ -15,13 +15,15 @@ E = 100;
 % hyperparameters
 sigma = 0.0001;
 k_max = 720; % max iteration times
-SHOW = [1,6]; % show the result of the Sth sensor, please note that the more agents you select, the slower the results appear
+% SHOW = [1,6]; % show the result of the Sth sensor, please note that the more agents you select, the slower the results appear
 SensingPeriod = 30; % The number of steps between obtaining new measurements
-gamma = 0.3;
+% gamma = 0.3;
+gamma = 0.000001;
 v = 0.01;
 l = 0.01;
 % rng('default'); % If you want to generate new initial positions every time, comment out this line
-rng(2)
+% rng(2)
+rng(3)
 
 figure(1)
 InputSpace_test = {linspace(-4, 4, a); linspace(-4, 4, a)};
@@ -99,7 +101,7 @@ L = 20*ones(1,S);
 reachGoal = zeros(1,S);
 steps = inf(1,S);
 k = 0; m = 1;
-boundary_offset = 2.9;
+boundary_offset = 3;
 boundary_check = @(coord, dim, op) op*(coord(:,dim) + op*boundary_offset) <= 0;
 
 v = zeros(S,2);
@@ -116,13 +118,15 @@ while k <= k_max
     u_b(:,2) = u_b(:,2) - 0.02*boundary_check(MovingAgents, 2, -1) + 0.02*boundary_check(MovingAgents, 2, 1);
 
     % collision check
-    for i=1:S
-        if ExplorationFlag
-            for j=1:S
-                u_c(i,:) = u_c(i,:) + distances(i,j) * 0.003./(MovingAgents(i,:)-MovingAgents(j,:)+0.00001); 
-                u_c = min(max(u_c, -0.05), 0.05);
+    for i=1:S        
+        for j=1:S
+            u_c(i,:) = u_c(i,:) + distances(i,j) * 0.003./(MovingAgents(i,:)-MovingAgents(j,:)+0.00001);
+            if ExplorationFlag(i)
+                u_c(i,:) = min(max(u_c(i,:), -0.1), 0.1);
+            else
+                u_c(i,:) = min(max(u_c(i,:), -0.008), 0.008);
             end
-        end
+        end        
     end
         
     if mod(k,SensingPeriod) == 0        
@@ -137,11 +141,17 @@ while k <= k_max
             clear phi tmp Pi_E
             phi = Find_Eigenfunctions_by_LUT(MovingAgents(n,:),E);          
             tmp = phi' * phi;
-            alpha(n,:) = (m-1)/m * alpha(n,:) + 1/m * tmp(:)';
-            beta(n,:) = (m-1)/m * beta(n,:) + 1/m * (phi' * y_s(n))'; 
-%             alpha(n,:) = alpha(n,:) + tmp(:)';
-%             beta(n,:) = beta(n,:) + (phi' * y_s(n))';             
-            
+%             alpha(n,:) = (m-1)/m * alpha(n,:) + 1/m * tmp(:)';
+%             beta(n,:) = (m-1)/m * beta(n,:) + 1/m * (phi' * y_s(n))'; 
+            alpha(n,:) = alpha(n,:) + tmp(:)';
+            beta(n,:) = beta(n,:) + (phi' * y_s(n))';
+%             if k <400
+%                 alpha(n,:) = 1/m * alpha(n,:) + (m-1)/m * tmp(:)';
+%                 beta(n,:) = 1/m * beta(n,:) + (m-1)/m * (phi' * y_s(n))';
+%             else
+%                 alpha(n,:) = 50/m * alpha(n,:) + (m-50)/m * tmp(:)';
+%                 beta(n,:) = 50/m * beta(n,:) + (m-50)/m * (phi' * y_s(n))';
+%             end
             % compute acceleration or velocity
             if ExplorationFlag(n)                
 %                 [goto_x,goto_y] = findMaxEdge(MovingAgents(n,:),reshape(diag(Pi_E{n}),a,a),1);
@@ -176,19 +186,38 @@ while k <= k_max
     % ÁÙÊ±
 %     f_E{SHOW} = PHI * pinv(reshape(alpha(SHOW,:),E,E)+sigma^2/S^2*pinv(LAMBDA)) * beta(SHOW,:)';
 %     Pi_E{SHOW} = K - PHI * pinv(reshape(alpha(SHOW,:),E,E)+sigma^2/S^2*pinv(LAMBDA)) * reshape(alpha(SHOW,:),E,E)*LAMBDA*PHI';
-
+    
+ % plot
+ labels = cellstr(num2str((1:S)', 'agent %d'));
     if mod(k,SensingPeriod) == 0        
-        for n = 1:S
+        for n = 1:S            
+            
             f_E = PHI * pinv(reshape(alpha(n,:),E,E)+sigma^2/S^2*pinv(LAMBDA)) * beta(n,:)';                       
             subplot(4,S,2*S+n);
-            pcolor(tmp_xx,tmp_yy,reshape(f_E,a,a));            
+            pcolor(tmp_xx,tmp_yy,reshape(f_E,a,a)');            
             clear f_E            
-            shading flat
+            shading flat            
             Pi_E = K - PHI * pinv(reshape(alpha(n,:),E,E)+sigma^2/S^2*pinv(LAMBDA)) * reshape(alpha(n,:),E,E)*LAMBDA*PHI'; 
             subplot(4,S,3*S+n);
             pcolor(tmp_xx,tmp_yy,reshape(diag(Pi_E),a,a));            
             shading flat            
             clear Pi_E
+            
+            % text
+            subplot(4, S, 2*S+1);
+            text(-7, 0.5, 'estimate', 'FontSize', 7, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'middle');            
+            subplot(4, S, 3*S+1);
+            text(-7, 0.5, 'uncertainty', 'FontSize', 7, 'HorizontalAlignment', 'right', 'VerticalAlignment', 'middle');            
+            subplot(4, S, 2*S+n); 
+            text(0.5, 3.7, labels{n}, 'FontSize', 6, 'HorizontalAlignment', 'center', 'VerticalAlignment', 'bottom');
+            subplot(4, S, 3*S+n)
+            if ExplorationFlag(n) == 1
+                text(0.5, -7, 'explorating...', 'Color', 'red', 'FontSize', 7, 'HorizontalAlignment', 'center', 'VerticalAlignment', 'middle');
+            else
+                text(0.5, -7, 'exploitation', 'Color', 'blue', 'FontSize', 7, 'HorizontalAlignment', 'center', 'VerticalAlignment', 'middle');
+            end
+            
+            
             pause(0.05);
         end
 
@@ -224,7 +253,15 @@ while k <= k_max
     
 %     delete(h_drones);        
 %     h_drones = plot3(MovingAgents(:,1), MovingAgents(:,2), z, 'ro', 'MarkerSize', 5, 'MarkerFaceColor', 'r');
-    k = k + 1;
+    k = k + 1;     
+    if k>400
+        gamma = 0.00000000001;
+    else
+        if k>100
+            gamma = 0.1^(floor((k-100)/100) + 6);
+        end
+    end
+
     disp(k)
     pause(0.01);    
 end

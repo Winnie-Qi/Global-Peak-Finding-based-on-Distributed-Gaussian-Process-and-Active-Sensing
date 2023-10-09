@@ -4,7 +4,7 @@ global InputSpace_LUT;
 ExplorationFlag = 1;
 step = 0;
 m = 1;
-M = 8;
+M = 9;
 a = size(f,1);
 [~, index_x] = min(abs(MovingAgent(1) - InputSpace_LUT{1})); 
 [~, index_y] = min(abs(MovingAgent(2) - InputSpace_LUT{2}));
@@ -37,22 +37,22 @@ if Exploration
             end
             break
         else
-            if L > 6
+            if L > 8
                 goto_x=0; goto_y=0;
                 ExplorationFlag = 0;
                 break
             end
         end
         L = L+1;
-        m = m + 1;
+        m = m + 0.9;
         M = M - 0.5;        
     end
 else
-    [max_value, max_index] = max(f(:));
+    [~, max_index] = max(f(:));
     [max_index_x, max_index_y] = ind2sub(size(f), max_index);
-    disp(max_index_x)
-    disp(max_index_y)
-    disp(max_value)
+%     disp(max_index_x)
+%     disp(max_index_y)
+%     disp(max_value)
     goto_x = max_index_x - index_x + 1;
     goto_y = max_index_y - index_y + 1;
     s = sqrt(goto_x^2 + goto_y^2);
