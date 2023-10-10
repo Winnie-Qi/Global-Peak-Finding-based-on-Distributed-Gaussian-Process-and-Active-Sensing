@@ -14,11 +14,11 @@ E = 100;
 
 % hyperparameters
 sigma = 0.0001;
-k_max = 720; % max iteration times
-SHOW = [1,6]; % show the result of the Sth sensor, please note that the more agents you select, the slower the results appear
+k_max = 820; % max iteration times
+% SHOW = [1,6]; % show the result of the Sth sensor, please note that the more agents you select, the slower the results appear
 SensingPeriod = 30; % The number of steps between obtaining new measurements
 % gamma = 0.3;
-gamma = 0.000001;
+gamma = 0.00001;
 v = 0.01;
 l = 0.01;
 % rng('default'); % If you want to generate new initial positions every time, comment out this line
@@ -99,7 +99,7 @@ beta = zeros(S,E); % (1,E) every sensor
 ExplorationFlag = ones(1,S);
 L = 20*ones(1,S);
 reachGoal = zeros(1,S);
-steps = inf(1,S);
+% steps = inf(1,S);
 k = 0; m = 1;
 boundary_offset = 3;
 boundary_check = @(coord, dim, op) op*(coord(:,dim) + op*boundary_offset) <= 0;
@@ -124,7 +124,7 @@ while k <= k_max
             if ExplorationFlag(i)
                 u_c(i,:) = min(max(u_c(i,:), -0.1), 0.1);
             else
-                u_c(i,:) = min(max(u_c(i,:), -0.01), 0.01);
+                u_c(i,:) = min(max(u_c(i,:), -0.005), 0.005);
             end
         end        
     end
@@ -141,16 +141,22 @@ while k <= k_max
             clear phi tmp Pi_E
             phi = Find_Eigenfunctions_by_LUT(MovingAgents(n,:),E);          
             tmp = phi' * phi;
-%             alpha(n,:) = (m-1)/m * alpha(n,:) + 1/m * tmp(:)';
-%             beta(n,:) = (m-1)/m * beta(n,:) + 1/m * (phi' * y_s(n))'; 
-            alpha(n,:) = alpha(n,:) + tmp(:)';
-            beta(n,:) = beta(n,:) + (phi' * y_s(n))';
-%             if k <400
-%                 alpha(n,:) = 1/m * alpha(n,:) + (m-1)/m * tmp(:)';
-%                 beta(n,:) = 1/m * beta(n,:) + (m-1)/m * (phi' * y_s(n))';
+            if k<630
+                alpha(n,:) = (m-1)/m * alpha(n,:) + 1/m * tmp(:)';
+                beta(n,:) = (m-1)/m * beta(n,:) + 1/m * (phi' * y_s(n))'; 
+            elseif k<660
+                alpha(n,:) = (m-5)/m * alpha(n,:) + 5/m * tmp(:)';
+                beta(n,:) = (m-5)/m * beta(n,:) + 5/m * (phi' * y_s(n))';
+            end
+%             alpha(n,:) = alpha(n,:) + tmp(:)';
+%             beta(n,:) = beta(n,:) + (phi' * y_s(n))';
+%             if k <50
+%             alpha(n,:) = 1/m * alpha(n,:) + (m-1)/m * tmp(:)';
+%             beta(n,:) = 1/m * beta(n,:) + (m-1)/m * (phi' * y_s(n))';
 %             else
-%                 alpha(n,:) = 50/m * alpha(n,:) + (m-50)/m * tmp(:)';
-%                 beta(n,:) = 50/m * beta(n,:) + (m-50)/m * (phi' * y_s(n))';
+%                 if k<100
+%             alpha(n,:) = 2/m * alpha(n,:) + 1/m * tmp(:)';
+%             beta(n,:) = 2/m * beta(n,:) + 1/m * (phi' * y_s(n))';
 %             end
             % compute acceleration or velocity
             if ExplorationFlag(n)                
@@ -163,12 +169,12 @@ while k <= k_max
 %                 f_E{n} = PHI * pinv(reshape(alpha(n,:),E,E)+sigma^2/S^2*pinv(LAMBDA)) * beta(n,:)';
 %                 [goto_x,goto_y] = findMaxEdge(MovingAgents(n,:),reshape(f_E{n},a,a),0);
                 f_E = PHI * pinv(reshape(alpha(n,:),E,E)+sigma^2/S^2*pinv(LAMBDA)) * beta(n,:)';
-                [goto_x,goto_y,~,step] = findMaxEdge(MovingAgents(n,:),reshape(f_E,a,a),0);
+                [goto_x,goto_y,~,reach] = findMaxEdge(MovingAgents(n,:),reshape(f_E,a,a),0);
                 v(n,:) = 0.03 * [goto_x,goto_y];
 %                 disp(n)
 %                 disp(v(n,:))
-                if step
-                    steps(n) = step;
+                if reach
+                    reachGoal(n) = reach;
                 end                
             end
             
@@ -238,13 +244,16 @@ while k <= k_max
 %     disp(u_c(q,:))
 %     disp('v')
 %     disp(v(q,:));
-    MovingAgents = MovingAgents + (~reachGoal' .* v);
+%     MovingAgents = MovingAgents + (~reachGoal' .* v);
+%     MovingAgents = MovingAgents + (reachGoal>0)'.* v * 0.25;
+    MovingAgents = MovingAgents + v;
+    MovingAgents = MovingAgents + (reachGoal' .* v)*1/4;
 %     MovingAgents = MovingAgents + v;
-    steps = steps - 1;
-    reachGoal = reachGoal + (steps == 0);
+%     steps = steps - 1;
+%     reachGoal = reachGoal + (steps == 0);
     
-    disp(ExplorationFlag)
-%     disp(reachGoal)
+%     disp(ExplorationFlag)
+    disp(reachGoal)
 %     disp(steps)
 %     disp('MovingAgents')
 %     disp(MovingAgents(q,:))
@@ -254,12 +263,11 @@ while k <= k_max
 %     delete(h_drones);        
 %     h_drones = plot3(MovingAgents(:,1), MovingAgents(:,2), z, 'ro', 'MarkerSize', 5, 'MarkerFaceColor', 'r');
     k = k + 1;     
-    if k>400
-        gamma = 0.00000000001;
-    else
-        if k>100
-            gamma = 0.1^(floor((k-100)/100) + 6);
-        end
+%     if k>500
+%         gamma = 0;
+%     else
+    if k>100
+        gamma = 0.1^(floor((k-100)/100) + 6);
     end
 
     disp(k)

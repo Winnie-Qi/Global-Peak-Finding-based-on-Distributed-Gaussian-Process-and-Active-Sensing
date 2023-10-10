@@ -8,7 +8,7 @@ We implemented the solution for multiple robots working together to explore an u
 
 The system is designed to be distributed, where agents can only communicate with each other within a certain distance. Throughout the process, collision avoidance between agents and prevention of crossing map boundaries are taken into consideration.
 
-图
+![gif](https://github.com/Winnie-Qi/Global-Peak-Finding-based-on-Distributed-Gaussian-Process-and-Active-Sensing/mat/gif2.gif)
 
 To run this project, please execute the main_mobile_agents.m file. You have the flexibility to modify the number of agents and the random seed to change the starting positions of the agents.
 

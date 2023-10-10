@@ -1,8 +1,8 @@
-function [goto_x,goto_y,ExplorationFlag,step] = findMaxEdge(MovingAgent,f,Exploration)
+function [goto_x,goto_y,ExplorationFlag,reachGoal] = findMaxEdge(MovingAgent,f,Exploration)
 
 global InputSpace_LUT;
 ExplorationFlag = 1;
-step = 0;
+reachGoal = 0;
 m = 1;
 M = 9;
 a = size(f,1);
@@ -37,14 +37,14 @@ if Exploration
             end
             break
         else
-            if L > 8
+            if L > 7
                 goto_x=0; goto_y=0;
                 ExplorationFlag = 0;
                 break
             end
         end
         L = L+1;
-        m = m + 0.9;
+        m = m + 1;
         M = M - 0.5;        
     end
 else
@@ -62,8 +62,8 @@ else
         goto_x = goto_x/s;
         goto_y = goto_y/s;
     end
-    if s < 11
-        step = floor(s*0.08/0.03);
+    if s < 12
+        reachGoal = 1;
     end
         
 end        
