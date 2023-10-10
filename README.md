@@ -9,7 +9,6 @@ We implemented the solution for multiple robots working together to explore an u
          alt="gif1.gif"
          width="60%"/>
 </center>
-
 *The GIF has been sped up for smoother display*
 
 The system is designed to be distributed, where agents can only communicate with each other within a certain distance. Throughout the process, collision avoidance between agents and prevention of crossing map boundaries are taken into consideration.
@@ -19,7 +18,6 @@ The system is designed to be distributed, where agents can only communicate with
          alt="gif2.gif"
          width="20%"/>
 </center>
-
 *collision avoidance*
 
 To run this project, please execute the *main_mobile_agents.m* file. You have the flexibility to modify the number of agents and the random seed to change the starting positions of the agents.
