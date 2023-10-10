@@ -17,8 +17,7 @@ The system is designed to be distributed, where agents can only communicate with
     <center>	<!--将图片和文字居中-->
     <img src="https://github.com/Winnie-Qi/Global-Peak-Finding-based-on-Distributed-Gaussian-Process-and-Active-Sensing/blob/main/mat/gif2.gif"
          alt="gif2.gif"
-         style="zoom:20%"/>
-    <br>		<!--换行-->
+         width="20%"/>
     biaoti	<!--标题-->
     </center>
 </div>
