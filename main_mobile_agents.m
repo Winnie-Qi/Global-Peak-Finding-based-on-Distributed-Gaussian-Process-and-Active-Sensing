@@ -14,7 +14,7 @@ E = 100;
 
 % hyperparameters
 sigma = 0.0001;
-k_max = 820; % max iteration times
+k_max = 1000; % max iteration times
 % SHOW = [1,6]; % show the result of the Sth sensor, please note that the more agents you select, the slower the results appear
 SensingPeriod = 30; % The number of steps between obtaining new measurements
 % gamma = 0.3;
