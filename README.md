@@ -13,9 +13,15 @@ The system is designed to be distributed, where agents can only communicate with
     jiaozhu "jiaozhu"
 </center>
 
-| ![gif2.gif](https://github.com/Winnie-Qi/Global-Peak-Finding-based-on-Distributed-Gaussian-Process-and-Active-Sensing/blob/main/mat/gif2.gif) |
-| :----------------------------------------------------------: |
-|                           jiaozhu                            |
+<div>			<!--块级封装-->
+    <center>	<!--将图片和文字居中-->
+    <img src="https://github.com/Winnie-Qi/Global-Peak-Finding-based-on-Distributed-Gaussian-Process-and-Active-Sensing/blob/main/mat/gif2.gif"
+         alt="gif2.gif"
+         style="zoom:20%"/>
+    <br>		<!--换行-->
+    biaoti	<!--标题-->
+    </center>
+</div>
 
 To run this project, please execute the main_mobile_agents.m file. You have the flexibility to modify the number of agents and the random seed to change the starting positions of the agents.
 

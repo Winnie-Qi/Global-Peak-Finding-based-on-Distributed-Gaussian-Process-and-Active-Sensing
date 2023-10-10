@@ -124,7 +124,7 @@ while k <= k_max
             if ExplorationFlag(i)
                 u_c(i,:) = min(max(u_c(i,:), -0.1), 0.1);
             else
-                u_c(i,:) = min(max(u_c(i,:), -0.005), 0.005);
+                u_c(i,:) = min(max(u_c(i,:), -0.005), 0.002);
             end
         end        
     end
@@ -283,7 +283,7 @@ while k <= k_max
 %     MovingAgents = MovingAgents + (~reachGoal' .* v);
 %     MovingAgents = MovingAgents + (reachGoal>0)'.* v * 0.25;
     MovingAgents = MovingAgents + v;
-    MovingAgents = MovingAgents + (reachGoal' .* v)*1/4;
+    MovingAgents = MovingAgents + (reachGoal' .* v)*1/5;
 %     MovingAgents = MovingAgents + v;
 %     steps = steps - 1;
 %     reachGoal = reachGoal + (steps == 0);
