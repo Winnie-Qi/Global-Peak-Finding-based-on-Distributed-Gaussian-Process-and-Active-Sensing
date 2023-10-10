@@ -14,7 +14,7 @@ E = 100;
 
 % hyperparameters
 sigma = 0.0001;
-k_max = 1000; % max iteration times
+k_max = 720; % max iteration times
 % SHOW = [1,6]; % show the result of the Sth sensor, please note that the more agents you select, the slower the results appear
 SensingPeriod = 30; % The number of steps between obtaining new measurements
 % gamma = 0.3;
@@ -124,7 +124,7 @@ while k <= k_max
             if ExplorationFlag(i)
                 u_c(i,:) = min(max(u_c(i,:), -0.1), 0.1);
             else
-                u_c(i,:) = min(max(u_c(i,:), -0.005), 0.002);
+                u_c(i,:) = min(max(u_c(i,:), -0.005), 0.005);
             end
         end        
     end
