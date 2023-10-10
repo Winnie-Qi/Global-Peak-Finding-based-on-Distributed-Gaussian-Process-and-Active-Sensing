@@ -10,7 +10,7 @@ The system is designed to be distributed, where agents can only communicate with
 
 <center>
     <img src="https://github.com/Winnie-Qi/Global-Peak-Finding-based-on-Distributed-Gaussian-Process-and-Active-Sensing/blob/main/mat/gif2.gif" width="20%"> 
-    jiaozhu
+    jiaozhu "jiaozhu"
 </center>
 
 | ![gif2.gif](https://github.com/Winnie-Qi/Global-Peak-Finding-based-on-Distributed-Gaussian-Process-and-Active-Sensing/blob/main/mat/gif2.gif) |
