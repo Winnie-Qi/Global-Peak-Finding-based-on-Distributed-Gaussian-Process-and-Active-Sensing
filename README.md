@@ -13,9 +13,9 @@ The system is designed to be distributed, where agents can only communicate with
     <img src="https://github.com/Winnie-Qi/Global-Peak-Finding-based-on-Distributed-Gaussian-Process-and-Active-Sensing/blob/main/mat/gif2.gif"
          alt="gif2.gif"
          width="20%"/>
-    biaoti	
     </center>
 </div>
+
 biaoti
 
 To run this project, please execute the main_mobile_agents.m file. You have the flexibility to modify the number of agents and the random seed to change the starting positions of the agents.
