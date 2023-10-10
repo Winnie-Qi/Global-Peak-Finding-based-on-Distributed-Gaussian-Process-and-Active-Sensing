@@ -157,14 +157,32 @@ while k <= k_max
                 alpha(n,:) = (m+19)/(m+20) * alpha(n,:) + 1/(m+20) * tmp(:)';
                 beta(n,:) = (m+19)/(m+20) * beta(n,:) + 1/(m+20) * (phi' * y_s(n))';
             elseif k<750
-                alpha(n,:) = (m+21)/(m+25) * alpha(n,:) + 1/(m+25) * tmp(:)';
-                beta(n,:) = (m+21)/(m+25) * beta(n,:) + 1/(m+25) * (phi' * y_s(n))';
+                alpha(n,:) = (m+24)/(m+25) * alpha(n,:) + 1/(m+25) * tmp(:)';
+                beta(n,:) = (m+24)/(m+25) * beta(n,:) + 1/(m+25) * (phi' * y_s(n))';
             elseif k<780
                 alpha(n,:) = (m+29)/(m+30) * alpha(n,:) + 1/(m+30) * tmp(:)';
                 beta(n,:) = (m+29)/(m+30) * beta(n,:) + 1/(m+30) * (phi' * y_s(n))';
-            else
+            elseif k<810
                 alpha(n,:) = (m+34)/(m+35) * alpha(n,:) + 1/(m+35) * tmp(:)';
                 beta(n,:) = (m+34)/(m+35) * beta(n,:) + 1/(m+35) * (phi' * y_s(n))';
+            elseif k<840
+                alpha(n,:) = (m+39)/(m+40) * alpha(n,:) + 1/(m+40) * tmp(:)';
+                beta(n,:) = (m+39)/(m+40) * beta(n,:) + 1/(m+40) * (phi' * y_s(n))';
+            elseif k<870
+                alpha(n,:) = (m+44)/(m+45) * alpha(n,:) + 1/(m+45) * tmp(:)';
+                beta(n,:) = (m+44)/(m+45) * beta(n,:) + 1/(m+45) * (phi' * y_s(n))';
+            elseif k<900
+                alpha(n,:) = (m+49)/(m+50) * alpha(n,:) + 1/(m+50) * tmp(:)';
+                beta(n,:) = (m+49)/(m+50) * beta(n,:) + 1/(m+50) * (phi' * y_s(n))';
+            elseif k<930
+                alpha(n,:) = (m+54)/(m+55) * alpha(n,:) + 1/(m+55) * tmp(:)';
+                beta(n,:) = (m+54)/(m+55) * beta(n,:) + 1/(m+55) * (phi' * y_s(n))';
+            elseif k<960
+                alpha(n,:) = (m+59)/(m+60) * alpha(n,:) + 1/(m+60) * tmp(:)';
+                beta(n,:) = (m+59)/(m+60) * beta(n,:) + 1/(m+60) * (phi' * y_s(n))';
+            else
+                alpha(n,:) = (m+64)/(m+65) * alpha(n,:) + 1/(m+65) * tmp(:)';
+                beta(n,:) = (m+64)/(m+65) * beta(n,:) + 1/(m+65) * (phi' * y_s(n))';
             end
 %             alpha(n,:) = alpha(n,:) + tmp(:)';
 %             beta(n,:) = beta(n,:) + (phi' * y_s(n))';
