@@ -9,14 +9,9 @@ We implemented the solution for multiple robots working together to explore an u
 The system is designed to be distributed, where agents can only communicate with each other within a certain distance. Throughout the process, collision avoidance between agents and prevention of crossing map boundaries are taken into consideration.
 
 <center>
-    <img style="border-radius: 0.3125em;
-    box-shadow: 0 2px 4px 0 rgba(34,36,38,.12),0 2px 10px 0 rgba(34,36,38,.08);" 
-    src="https://github.com/Winnie-Qi/Global-Peak-Finding-based-on-Distributed-Gaussian-Process-and-Active-Sensing/blob/main/mat/gif2.gif">
+    <img src="https://github.com/Winnie-Qi/Global-Peak-Finding-based-on-Distributed-Gaussian-Process-and-Active-Sensing/blob/main/mat/gif2.gif">
     <br>
-    <div style="color:orange; border-bottom: 1px solid #d9d9d9;
-    display: inline-block;
-    color: #999;
-    padding: 2px;">jiaozhu</div>
+    <div>jiaozhu</div>
 </center>
 
 ![gif](https://github.com/Winnie-Qi/Global-Peak-Finding-based-on-Distributed-Gaussian-Process-and-Active-Sensing/blob/main/mat/gif2.gif)
