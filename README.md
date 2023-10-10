@@ -16,7 +16,7 @@ The system is designed to be distributed, where agents can only communicate with
     </center>
 </div>
 
-biaoti
+*collision avoidance*
 
 To run this project, please execute the main_mobile_agents.m file. You have the flexibility to modify the number of agents and the random seed to change the starting positions of the agents.
 
