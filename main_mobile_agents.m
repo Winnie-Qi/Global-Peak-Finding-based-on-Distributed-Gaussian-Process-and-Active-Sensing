@@ -141,43 +141,43 @@ while k <= k_max
             clear phi tmp Pi_E
             phi = Find_Eigenfunctions_by_LUT(MovingAgents(n,:),E);          
             tmp = phi' * phi;
-            if k<600
+            if k<570
                 alpha(n,:) = (m-1)/m * alpha(n,:) + 1/m * tmp(:)';
                 beta(n,:) = (m-1)/m * beta(n,:) + 1/m * (phi' * y_s(n))'; 
-            elseif k<630
+            elseif k<600
                 alpha(n,:) = (m+4)/(m+5) * alpha(n,:) + 1/(m+5) * tmp(:)';
                 beta(n,:) = (m+4)/(m+5) * beta(n,:) + 1/(m+5) * (phi' * y_s(n))';
-            elseif k<660
+            elseif k<630
                 alpha(n,:) = (m+9)/(m+10) * alpha(n,:) + 1/(m+10) * tmp(:)';
                 beta(n,:) = (m+9)/(m+10) * beta(n,:) + 1/(m+10) * (phi' * y_s(n))';
-            elseif k<690
+            elseif k<660
                 alpha(n,:) = (m+14)/(m+15) * alpha(n,:) + 1/(m+15) * tmp(:)';
                 beta(n,:) = (m+14)/(m+15) * beta(n,:) + 1/(m+15) * (phi' * y_s(n))';
-            elseif k<720
+            elseif k<790
                 alpha(n,:) = (m+19)/(m+20) * alpha(n,:) + 1/(m+20) * tmp(:)';
                 beta(n,:) = (m+19)/(m+20) * beta(n,:) + 1/(m+20) * (phi' * y_s(n))';
-            elseif k<750
+            elseif k<720
                 alpha(n,:) = (m+24)/(m+25) * alpha(n,:) + 1/(m+25) * tmp(:)';
                 beta(n,:) = (m+24)/(m+25) * beta(n,:) + 1/(m+25) * (phi' * y_s(n))';
-            elseif k<780
+            elseif k<750
                 alpha(n,:) = (m+29)/(m+30) * alpha(n,:) + 1/(m+30) * tmp(:)';
                 beta(n,:) = (m+29)/(m+30) * beta(n,:) + 1/(m+30) * (phi' * y_s(n))';
-            elseif k<810
+            elseif k<780
                 alpha(n,:) = (m+34)/(m+35) * alpha(n,:) + 1/(m+35) * tmp(:)';
                 beta(n,:) = (m+34)/(m+35) * beta(n,:) + 1/(m+35) * (phi' * y_s(n))';
-            elseif k<840
+            elseif k<810
                 alpha(n,:) = (m+39)/(m+40) * alpha(n,:) + 1/(m+40) * tmp(:)';
                 beta(n,:) = (m+39)/(m+40) * beta(n,:) + 1/(m+40) * (phi' * y_s(n))';
-            elseif k<870
+            elseif k<840
                 alpha(n,:) = (m+44)/(m+45) * alpha(n,:) + 1/(m+45) * tmp(:)';
                 beta(n,:) = (m+44)/(m+45) * beta(n,:) + 1/(m+45) * (phi' * y_s(n))';
-            elseif k<900
+            elseif k<870
                 alpha(n,:) = (m+49)/(m+50) * alpha(n,:) + 1/(m+50) * tmp(:)';
                 beta(n,:) = (m+49)/(m+50) * beta(n,:) + 1/(m+50) * (phi' * y_s(n))';
-            elseif k<930
+            elseif k<900
                 alpha(n,:) = (m+54)/(m+55) * alpha(n,:) + 1/(m+55) * tmp(:)';
                 beta(n,:) = (m+54)/(m+55) * beta(n,:) + 1/(m+55) * (phi' * y_s(n))';
-            elseif k<960
+            elseif k<930
                 alpha(n,:) = (m+59)/(m+60) * alpha(n,:) + 1/(m+60) * tmp(:)';
                 beta(n,:) = (m+59)/(m+60) * beta(n,:) + 1/(m+60) * (phi' * y_s(n))';
             else
