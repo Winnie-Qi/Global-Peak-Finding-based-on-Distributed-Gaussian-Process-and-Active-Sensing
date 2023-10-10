@@ -153,9 +153,18 @@ while k <= k_max
             elseif k<690
                 alpha(n,:) = (m+14)/(m+15) * alpha(n,:) + 1/(m+15) * tmp(:)';
                 beta(n,:) = (m+14)/(m+15) * beta(n,:) + 1/(m+15) * (phi' * y_s(n))';
-            else
+            elseif k<720
                 alpha(n,:) = (m+19)/(m+20) * alpha(n,:) + 1/(m+20) * tmp(:)';
                 beta(n,:) = (m+19)/(m+20) * beta(n,:) + 1/(m+20) * (phi' * y_s(n))';
+            elseif k<750
+                alpha(n,:) = (m+21)/(m+25) * alpha(n,:) + 1/(m+25) * tmp(:)';
+                beta(n,:) = (m+21)/(m+25) * beta(n,:) + 1/(m+25) * (phi' * y_s(n))';
+            elseif k<780
+                alpha(n,:) = (m+29)/(m+30) * alpha(n,:) + 1/(m+30) * tmp(:)';
+                beta(n,:) = (m+29)/(m+30) * beta(n,:) + 1/(m+30) * (phi' * y_s(n))';
+            else
+                alpha(n,:) = (m+34)/(m+35) * alpha(n,:) + 1/(m+35) * tmp(:)';
+                beta(n,:) = (m+34)/(m+35) * beta(n,:) + 1/(m+35) * (phi' * y_s(n))';
             end
 %             alpha(n,:) = alpha(n,:) + tmp(:)';
 %             beta(n,:) = beta(n,:) + (phi' * y_s(n))';
