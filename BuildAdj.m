@@ -1,4 +1,4 @@
-function [distances, tran] = BuildAdj(locations,r,InputSpace_test,S)
+function [distances, tran] = BuildAdj(locations,r,InputSpace_test,S,ray)
 % BuildAdj - To compute the adjacency matrix for each agent and plot
 % Inputs:
 %   locations - (n, 2)matrix, S is the number of sensors/agents, (x,y)
@@ -38,4 +38,13 @@ z = ones(S,1) * 15;
 subplot(4,S,[1,2,3,1+S,2+S,3+S]);
 ShowEnvironment3D(InputSpace_test);
 plot(G,'XData',locations(:,1),'YData',locations(:,2),'ZData',z);
+% % rays = plot3(repelem(locations(:,1), 2), repelem(locations(:,2), 2), repmat([0;1], S, 1), '--k');
+if ~ray
+    for i = 1:S
+        plot3([locations(i,1), locations(i,1)], [locations(i,2), locations(i,2)], [0, z(i)], '--r');
+    end
+    pause(0.01);
+    rays = findall(gca,'Color','r');
+    delete (rays);
+end
 hold off

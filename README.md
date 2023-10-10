@@ -4,25 +4,29 @@ This project is one part of the module: Intelligent Distributed System and was i
 
 We implemented the solution for multiple robots working together to explore an unknown environment and eventually gather at the global peak. The process makes use of Distributed Gaussian Process and Average Consensus algorithms.
 
-图（The GIF has been sped up for smoother display）
+<center>	
+   <img src="https://github.com/Winnie-Qi/Global-Peak-Finding-based-on-Distributed-Gaussian-Process-and-Active-Sensing/blob/main/mat/gif1.gif"
+         alt="gif1.gif"
+         width="60%"/>
+</center>
+
+*The GIF has been sped up for smoother display*
 
 The system is designed to be distributed, where agents can only communicate with each other within a certain distance. Throughout the process, collision avoidance between agents and prevention of crossing map boundaries are taken into consideration.
 
-<div>			
-    <center>	
-    <img src="https://github.com/Winnie-Qi/Global-Peak-Finding-based-on-Distributed-Gaussian-Process-and-Active-Sensing/blob/main/mat/gif2.gif"
+<center>	
+   <img src="https://github.com/Winnie-Qi/Global-Peak-Finding-based-on-Distributed-Gaussian-Process-and-Active-Sensing/blob/main/mat/gif2.gif"
          alt="gif2.gif"
          width="20%"/>
-    </center>
-</div>
+</center>
 
 *collision avoidance*
 
-To run this project, please execute the main_mobile_agents.m file. You have the flexibility to modify the number of agents and the random seed to change the starting positions of the agents.
+To run this project, please execute the *main_mobile_agents.m* file. You have the flexibility to modify the number of agents and the random seed to change the starting positions of the agents.
 
 图（main_mobile_agents.m）
 
-If you want to observe how information is updated and transferred between agents, please execute the main_stationary_sensors.m file. This script demonstrates the updating and transfer of information between stationary sensors. You can modify the density or the communication radius of the agents and choose which agent's results will be displayed.
+If you want to observe how information is updated and transferred between agents, please execute the *main_stationary_sensors.m* file. This script demonstrates the updating and transfer of information between stationary sensors. You can modify the density or the communication radius of the agents and choose which agent's results will be displayed.
 
 图
 

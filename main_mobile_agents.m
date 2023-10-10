@@ -8,22 +8,20 @@ clear all;
 
 % The parameters here can be modified by the users
 S = 6; % The number of moving agents is S
+rng('default') % If you want to generate new initial positions every time, comment out this line
+
+% hyperparameters
 r = 1.0; % The range of communication with nearby agents
 a = 100; % test points density
 E = 100;
-
-% hyperparameters
 sigma = 0.0001;
-k_max = 720; % max iteration times
+k_max = 1000; % max iteration times
 % SHOW = [1,6]; % show the result of the Sth sensor, please note that the more agents you select, the slower the results appear
 SensingPeriod = 30; % The number of steps between obtaining new measurements
 % gamma = 0.3;
 gamma = 0.00001;
 v = 0.01;
 l = 0.01;
-% rng('default'); % If you want to generate new initial positions every time, comment out this line
-% rng(2)
-rng(3)
 
 figure(1)
 InputSpace_test = {linspace(-4, 4, a); linspace(-4, 4, a)};
@@ -65,13 +63,6 @@ while any(distances < safe_distance)
 end
 MovingAgents = StartAgents;
 
-% hold on
-% h_drones = plot3(MovingAgents(:,1), MovingAgents(:,2), z, 'ro', 'MarkerSize', 5, 'MarkerFaceColor', 'r');
-% for i = 1:S
-%     plot3([MovingAgents(i,1), MovingAgents(i,1)], [MovingAgents(i,2), MovingAgents(i,2)], [0, z(i)], '--k');
-% end
-% [~,~] = BuildAdj(MovingAgents, r);
-
 y_s = f(MovingAgents(:,1), MovingAgents(:,2)) + sigma*randn(size(MovingAgents,1),1);
 
 if 0 % if you wannt to see the distributed result here
@@ -86,15 +77,10 @@ if 0 % if you wannt to see the distributed result here
     colorbar
 end
 
-% figure(5)
-% h_drones = plot3(StartAgents(:,1), StartAgents(:,2), z, 'ro', 'MarkerSize', 10, 'MarkerFaceColor', 'r');
-
 % Intialize alpha and beta
 alpha = zeros(S,E*E); % (1,E*E) every sensor
 beta = zeros(S,E); % (1,E) every sensor
 
-% f_E = cell(S,1);
-% Pi_E = cell(S,1);
 
 ExplorationFlag = ones(1,S);
 L = 20*ones(1,S);
@@ -108,10 +94,10 @@ v = zeros(S,2);
 
 % main loop
 while k <= k_max        
-    [distances,tran] = BuildAdj(MovingAgents, r, InputSpace_test, S);    
+    ray = mod(k,SensingPeriod);
+    [distances,tran] = BuildAdj(MovingAgents, r, InputSpace_test, S, ray);    
     u_b = zeros(S,2); % boundary condition
     u_c = zeros(S,2); % collision condition
-%     u_g = zeros(S,2); % goal oriented
     
     % boundary check
     u_b(:,1) = u_b(:,1) + 0.02*boundary_check(MovingAgents, 1, 1) - 0.02*boundary_check(MovingAgents, 1, -1);
@@ -144,71 +130,23 @@ while k <= k_max
             if k<570
                 alpha(n,:) = (m-1)/m * alpha(n,:) + 1/m * tmp(:)';
                 beta(n,:) = (m-1)/m * beta(n,:) + 1/m * (phi' * y_s(n))'; 
-            elseif k<600
-                alpha(n,:) = (m+4)/(m+5) * alpha(n,:) + 1/(m+5) * tmp(:)';
-                beta(n,:) = (m+4)/(m+5) * beta(n,:) + 1/(m+5) * (phi' * y_s(n))';
-            elseif k<630
-                alpha(n,:) = (m+9)/(m+10) * alpha(n,:) + 1/(m+10) * tmp(:)';
-                beta(n,:) = (m+9)/(m+10) * beta(n,:) + 1/(m+10) * (phi' * y_s(n))';
-            elseif k<660
-                alpha(n,:) = (m+14)/(m+15) * alpha(n,:) + 1/(m+15) * tmp(:)';
-                beta(n,:) = (m+14)/(m+15) * beta(n,:) + 1/(m+15) * (phi' * y_s(n))';
-            elseif k<790
-                alpha(n,:) = (m+19)/(m+20) * alpha(n,:) + 1/(m+20) * tmp(:)';
-                beta(n,:) = (m+19)/(m+20) * beta(n,:) + 1/(m+20) * (phi' * y_s(n))';
-            elseif k<720
-                alpha(n,:) = (m+24)/(m+25) * alpha(n,:) + 1/(m+25) * tmp(:)';
-                beta(n,:) = (m+24)/(m+25) * beta(n,:) + 1/(m+25) * (phi' * y_s(n))';
-            elseif k<750
-                alpha(n,:) = (m+29)/(m+30) * alpha(n,:) + 1/(m+30) * tmp(:)';
-                beta(n,:) = (m+29)/(m+30) * beta(n,:) + 1/(m+30) * (phi' * y_s(n))';
-            elseif k<780
-                alpha(n,:) = (m+34)/(m+35) * alpha(n,:) + 1/(m+35) * tmp(:)';
-                beta(n,:) = (m+34)/(m+35) * beta(n,:) + 1/(m+35) * (phi' * y_s(n))';
-            elseif k<810
-                alpha(n,:) = (m+39)/(m+40) * alpha(n,:) + 1/(m+40) * tmp(:)';
-                beta(n,:) = (m+39)/(m+40) * beta(n,:) + 1/(m+40) * (phi' * y_s(n))';
-            elseif k<840
-                alpha(n,:) = (m+44)/(m+45) * alpha(n,:) + 1/(m+45) * tmp(:)';
-                beta(n,:) = (m+44)/(m+45) * beta(n,:) + 1/(m+45) * (phi' * y_s(n))';
-            elseif k<870
-                alpha(n,:) = (m+49)/(m+50) * alpha(n,:) + 1/(m+50) * tmp(:)';
-                beta(n,:) = (m+49)/(m+50) * beta(n,:) + 1/(m+50) * (phi' * y_s(n))';
-            elseif k<900
-                alpha(n,:) = (m+54)/(m+55) * alpha(n,:) + 1/(m+55) * tmp(:)';
-                beta(n,:) = (m+54)/(m+55) * beta(n,:) + 1/(m+55) * (phi' * y_s(n))';
-            elseif k<930
-                alpha(n,:) = (m+59)/(m+60) * alpha(n,:) + 1/(m+60) * tmp(:)';
-                beta(n,:) = (m+59)/(m+60) * beta(n,:) + 1/(m+60) * (phi' * y_s(n))';
-            else
-                alpha(n,:) = (m+64)/(m+65) * alpha(n,:) + 1/(m+65) * tmp(:)';
-                beta(n,:) = (m+64)/(m+65) * beta(n,:) + 1/(m+65) * (phi' * y_s(n))';
+            elseif ~reachGoal(n)
+                alpha(n,:) = (m + 5*floor((k - 570)/30)-1)/(m + 5*floor((k - 570)/30)) * alpha(n,:) + 1/(m + 5*floor((k - 570)/30)) * tmp(:)';
+                beta(n,:) = (m + 5*floor((k - 570)/30)-1)/(m + 5*floor((k - 570)/30)) * beta(n,:) + 1/(m + 5*floor((k - 570)/30)) * (phi' * y_s(n))';
             end
 %             alpha(n,:) = alpha(n,:) + tmp(:)';
 %             beta(n,:) = beta(n,:) + (phi' * y_s(n))';
-%             if k <50
-%             alpha(n,:) = 1/m * alpha(n,:) + (m-1)/m * tmp(:)';
-%             beta(n,:) = 1/m * beta(n,:) + (m-1)/m * (phi' * y_s(n))';
-%             else
-%                 if k<100
-%             alpha(n,:) = 2/m * alpha(n,:) + 1/m * tmp(:)';
-%             beta(n,:) = 2/m * beta(n,:) + 1/m * (phi' * y_s(n))';
-%             end
+%             
             % compute acceleration or velocity
             if ExplorationFlag(n)                
-%                 [goto_x,goto_y] = findMaxEdge(MovingAgents(n,:),reshape(diag(Pi_E{n}),a,a),1);
                 Pi_E = K - PHI * pinv(reshape(alpha(n,:),E,E)+sigma^2/S^2*pinv(LAMBDA)) * reshape(alpha(n,:),E,E)*LAMBDA*PHI';
                 [goto_x,goto_y,ExplorationFlag(n),~] = findMaxEdge(MovingAgents(n,:),reshape(diag(Pi_E),a,a),1);
                 v(n,:) = 0.03 * [goto_x,goto_y];
                  
             else
-%                 f_E{n} = PHI * pinv(reshape(alpha(n,:),E,E)+sigma^2/S^2*pinv(LAMBDA)) * beta(n,:)';
-%                 [goto_x,goto_y] = findMaxEdge(MovingAgents(n,:),reshape(f_E{n},a,a),0);
                 f_E = PHI * pinv(reshape(alpha(n,:),E,E)+sigma^2/S^2*pinv(LAMBDA)) * beta(n,:)';
                 [goto_x,goto_y,~,reach] = findMaxEdge(MovingAgents(n,:),reshape(f_E,a,a),0);
                 v(n,:) = 0.03 * [goto_x,goto_y];
-%                 disp(n)
-%                 disp(v(n,:))
                 if reach
                     reachGoal(n) = reach;
                 end                
@@ -218,17 +156,7 @@ while k <= k_max
         
         m = m + 1;       
     end
-    for n = 1:S
-        if ExplorationFlag
-%             f_E{n} = PHI * pinv(reshape(alpha(n,:),E,E)+sigma^2/S^2*pinv(LAMBDA)) * beta(n,:)';
-        end
-%         Pi_E{n} = K - PHI * pinv(reshape(alpha(n,:),E,E)+sigma^2/S^2*pinv(LAMBDA)) * reshape(alpha(n,:),E,E)*LAMBDA*PHI';         
-    end    
-            
-    % 临时
-%     f_E{SHOW} = PHI * pinv(reshape(alpha(SHOW,:),E,E)+sigma^2/S^2*pinv(LAMBDA)) * beta(SHOW,:)';
-%     Pi_E{SHOW} = K - PHI * pinv(reshape(alpha(SHOW,:),E,E)+sigma^2/S^2*pinv(LAMBDA)) * reshape(alpha(SHOW,:),E,E)*LAMBDA*PHI';
-    
+
  % plot
  labels = cellstr(num2str((1:S)', 'agent %d'));
     if mod(k,SensingPeriod) == 0        
@@ -294,10 +222,7 @@ while k <= k_max
 %     disp('MovingAgents')
 %     disp(MovingAgents(q,:))
 %     MovingAgents(:,1) = MovingAgents(:,1)+0.1; % moving
-    % 在这里可以画一次激光效果图
     
-%     delete(h_drones);        
-%     h_drones = plot3(MovingAgents(:,1), MovingAgents(:,2), z, 'ro', 'MarkerSize', 5, 'MarkerFaceColor', 'r');
     k = k + 1;     
 %     if k>500
 %         gamma = 0;

@@ -8,11 +8,12 @@ clear all;
 
 % The parameters here can be modified by the users
 S = 6; % The number of moving agents is S
+rng('default') % If you want to generate new initial positions every time, comment out this line
+
+% hyperparameters
 r = 1.0; % The range of communication with nearby agents
 a = 100; % test points density
 E = 100;
-
-% hyperparameters
 sigma = 0.0001;
 k_max = 1000; % max iteration times
 % SHOW = [1,6]; % show the result of the Sth sensor, please note that the more agents you select, the slower the results appear
@@ -23,7 +24,6 @@ v = 0.01;
 l = 0.01;
 % rng('default'); % If you want to generate new initial positions every time, comment out this line
 % rng(2)
-rng(3)
 
 figure(1)
 InputSpace_test = {linspace(-4, 4, a); linspace(-4, 4, a)};
@@ -101,14 +101,15 @@ L = 20*ones(1,S);
 reachGoal = zeros(1,S);
 % steps = inf(1,S);
 k = 0; m = 1;
-boundary_offset = 3;
+boundary_offset = 2.9;
 boundary_check = @(coord, dim, op) op*(coord(:,dim) + op*boundary_offset) <= 0;
 
 v = zeros(S,2);
 
 % main loop
 while k <= k_max        
-    [distances,tran] = BuildAdj(MovingAgents, r, InputSpace_test, S);    
+    ray = mod(k,SensingPeriod);
+    [distances,tran] = BuildAdj(MovingAgents, r, InputSpace_test, S, ray);    
     u_b = zeros(S,2); % boundary condition
     u_c = zeros(S,2); % collision condition
 %     u_g = zeros(S,2); % goal oriented
@@ -124,7 +125,7 @@ while k <= k_max
             if ExplorationFlag(i)
                 u_c(i,:) = min(max(u_c(i,:), -0.1), 0.1);
             else
-                u_c(i,:) = min(max(u_c(i,:), -0.005), 0.005);
+                u_c(i,:) = min(max(u_c(i,:), -0.003), 0.003);
             end
         end        
     end
@@ -141,68 +142,26 @@ while k <= k_max
             clear phi tmp Pi_E
             phi = Find_Eigenfunctions_by_LUT(MovingAgents(n,:),E);          
             tmp = phi' * phi;
-            if k<600
+            if k<570
                 alpha(n,:) = (m-1)/m * alpha(n,:) + 1/m * tmp(:)';
                 beta(n,:) = (m-1)/m * beta(n,:) + 1/m * (phi' * y_s(n))'; 
-            elseif k<630
-                alpha(n,:) = (m+4)/(m+5) * alpha(n,:) + 1/(m+5) * tmp(:)';
-                beta(n,:) = (m+4)/(m+5) * beta(n,:) + 1/(m+5) * (phi' * y_s(n))';
-            elseif k<660
-                alpha(n,:) = (m+9)/(m+10) * alpha(n,:) + 1/(m+10) * tmp(:)';
-                beta(n,:) = (m+9)/(m+10) * beta(n,:) + 1/(m+10) * (phi' * y_s(n))';
-            elseif k<690
-                alpha(n,:) = (m+14)/(m+15) * alpha(n,:) + 1/(m+15) * tmp(:)';
-                beta(n,:) = (m+14)/(m+15) * beta(n,:) + 1/(m+15) * (phi' * y_s(n))';
-            elseif k<720
-                alpha(n,:) = (m+19)/(m+20) * alpha(n,:) + 1/(m+20) * tmp(:)';
-                beta(n,:) = (m+19)/(m+20) * beta(n,:) + 1/(m+20) * (phi' * y_s(n))';
-            elseif k<750
-                alpha(n,:) = (m+21)/(m+25) * alpha(n,:) + 1/(m+25) * tmp(:)';
-                beta(n,:) = (m+21)/(m+25) * beta(n,:) + 1/(m+25) * (phi' * y_s(n))';
-            elseif k<780
-                alpha(n,:) = (m+29)/(m+30) * alpha(n,:) + 1/(m+30) * tmp(:)';
-                beta(n,:) = (m+29)/(m+30) * beta(n,:) + 1/(m+30) * (phi' * y_s(n))';
-            elseif k<810
-                alpha(n,:) = (m+34)/(m+35) * alpha(n,:) + 1/(m+35) * tmp(:)';
-                beta(n,:) = (m+34)/(m+35) * beta(n,:) + 1/(m+35) * (phi' * y_s(n))';
-            elseif k<840
-                alpha(n,:) = (m+39)/(m+40) * alpha(n,:) + 1/(m+40) * tmp(:)';
-                beta(n,:) = (m+39)/(m+40) * beta(n,:) + 1/(m+40) * (phi' * y_s(n))';
-            elseif k<870
-                alpha(n,:) = (m+44)/(m+45) * alpha(n,:) + 1/(m+45) * tmp(:)';
-                beta(n,:) = (m+44)/(m+45) * beta(n,:) + 1/(m+45) * (phi' * y_s(n))';
-            elseif k<900
-                alpha(n,:) = (m+49)/(m+50) * alpha(n,:) + 1/(m+50) * tmp(:)';
-                beta(n,:) = (m+49)/(m+50) * beta(n,:) + 1/(m+50) * (phi' * y_s(n))';
-            elseif k<930
-                alpha(n,:) = (m+54)/(m+55) * alpha(n,:) + 1/(m+55) * tmp(:)';
-                beta(n,:) = (m+454)/(m+55) * beta(n,:) + 1/(m+55) * (phi' * y_s(n))';
+            elseif ~reachGoal(n)
+                alpha(n,:) = (m + 5*floor((k - 570)/30)-1)/(m + 5*floor((k - 570)/30)) * alpha(n,:) + 1/(m + 5*floor((k - 570)/30)) * tmp(:)';
+                beta(n,:) = (m + 5*floor((k - 570)/30)-1)/(m + 5*floor((k - 570)/30)) * beta(n,:) + 1/(m + 5*floor((k - 570)/30)) * (phi' * y_s(n))';
             end
 %             alpha(n,:) = alpha(n,:) + tmp(:)';
 %             beta(n,:) = beta(n,:) + (phi' * y_s(n))';
-%             if k <50
-%             alpha(n,:) = 1/m * alpha(n,:) + (m-1)/m * tmp(:)';
-%             beta(n,:) = 1/m * beta(n,:) + (m-1)/m * (phi' * y_s(n))';
-%             else
-%                 if k<100
-%             alpha(n,:) = 2/m * alpha(n,:) + 1/m * tmp(:)';
-%             beta(n,:) = 2/m * beta(n,:) + 1/m * (phi' * y_s(n))';
-%             end
+%             
             % compute acceleration or velocity
             if ExplorationFlag(n)                
-%                 [goto_x,goto_y] = findMaxEdge(MovingAgents(n,:),reshape(diag(Pi_E{n}),a,a),1);
                 Pi_E = K - PHI * pinv(reshape(alpha(n,:),E,E)+sigma^2/S^2*pinv(LAMBDA)) * reshape(alpha(n,:),E,E)*LAMBDA*PHI';
                 [goto_x,goto_y,ExplorationFlag(n),~] = findMaxEdge(MovingAgents(n,:),reshape(diag(Pi_E),a,a),1);
                 v(n,:) = 0.03 * [goto_x,goto_y];
                  
             else
-%                 f_E{n} = PHI * pinv(reshape(alpha(n,:),E,E)+sigma^2/S^2*pinv(LAMBDA)) * beta(n,:)';
-%                 [goto_x,goto_y] = findMaxEdge(MovingAgents(n,:),reshape(f_E{n},a,a),0);
                 f_E = PHI * pinv(reshape(alpha(n,:),E,E)+sigma^2/S^2*pinv(LAMBDA)) * beta(n,:)';
                 [goto_x,goto_y,~,reach] = findMaxEdge(MovingAgents(n,:),reshape(f_E,a,a),0);
                 v(n,:) = 0.03 * [goto_x,goto_y];
-%                 disp(n)
-%                 disp(v(n,:))
                 if reach
                     reachGoal(n) = reach;
                 end                
@@ -212,17 +171,7 @@ while k <= k_max
         
         m = m + 1;       
     end
-    for n = 1:S
-        if ExplorationFlag
-%             f_E{n} = PHI * pinv(reshape(alpha(n,:),E,E)+sigma^2/S^2*pinv(LAMBDA)) * beta(n,:)';
-        end
-%         Pi_E{n} = K - PHI * pinv(reshape(alpha(n,:),E,E)+sigma^2/S^2*pinv(LAMBDA)) * reshape(alpha(n,:),E,E)*LAMBDA*PHI';         
-    end    
-            
-    % 临时
-%     f_E{SHOW} = PHI * pinv(reshape(alpha(SHOW,:),E,E)+sigma^2/S^2*pinv(LAMBDA)) * beta(SHOW,:)';
-%     Pi_E{SHOW} = K - PHI * pinv(reshape(alpha(SHOW,:),E,E)+sigma^2/S^2*pinv(LAMBDA)) * reshape(alpha(SHOW,:),E,E)*LAMBDA*PHI';
-    
+
  % plot
  labels = cellstr(num2str((1:S)', 'agent %d'));
     if mod(k,SensingPeriod) == 0        
@@ -277,7 +226,7 @@ while k <= k_max
 %     MovingAgents = MovingAgents + (~reachGoal' .* v);
 %     MovingAgents = MovingAgents + (reachGoal>0)'.* v * 0.25;
     MovingAgents = MovingAgents + v;
-    MovingAgents = MovingAgents + (reachGoal' .* v)*1/4;
+    MovingAgents = MovingAgents + (reachGoal' .* v)*1/5;
 %     MovingAgents = MovingAgents + v;
 %     steps = steps - 1;
 %     reachGoal = reachGoal + (steps == 0);
@@ -288,10 +237,7 @@ while k <= k_max
 %     disp('MovingAgents')
 %     disp(MovingAgents(q,:))
 %     MovingAgents(:,1) = MovingAgents(:,1)+0.1; % moving
-    % 在这里可以画一次激光效果图
     
-%     delete(h_drones);        
-%     h_drones = plot3(MovingAgents(:,1), MovingAgents(:,2), z, 'ro', 'MarkerSize', 5, 'MarkerFaceColor', 'r');
     k = k + 1;     
 %     if k>500
 %         gamma = 0;
