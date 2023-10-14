@@ -8,18 +8,19 @@ clear all;
 
 % The parameters here can be modified by the users
 S = 6; % The number of moving agents is S
-rng('default') % If you want to generate new initial positions every time, comment out this line
+rng(1) % If you want to generate new initial positions every time, comment out this line
 
 % hyperparameters
 r = 1.0; % The range of communication with nearby agents
 a = 100; % test points density
-E = 100;
+E = 120;
 sigma = 0.0001;
-k_max = 1000; % max iteration times
+k_max = 500; % max iteration times
 % SHOW = [1,6]; % show the result of the Sth sensor, please note that the more agents you select, the slower the results appear
 SensingPeriod = 30; % The number of steps between obtaining new measurements
 % gamma = 0.3;
 gamma = 0.00001;
+% gamma = 0.01;
 v = 0.01;
 l = 0.01;
 
@@ -85,7 +86,7 @@ beta = zeros(S,E); % (1,E) every sensor
 ExplorationFlag = ones(1,S);
 L = 20*ones(1,S);
 reachGoal = zeros(1,S);
-% steps = inf(1,S);
+update = ones(1,S);
 k = 0; m = 1;
 boundary_offset = 3;
 boundary_check = @(coord, dim, op) op*(coord(:,dim) + op*boundary_offset) <= 0;
@@ -100,8 +101,8 @@ while k <= k_max
     u_c = zeros(S,2); % collision condition
     
     % boundary check
-    u_b(:,1) = u_b(:,1) + 0.02*boundary_check(MovingAgents, 1, 1) - 0.02*boundary_check(MovingAgents, 1, -1);
-    u_b(:,2) = u_b(:,2) - 0.02*boundary_check(MovingAgents, 2, -1) + 0.02*boundary_check(MovingAgents, 2, 1);
+    u_b(:,1) = u_b(:,1) + 0.01*boundary_check(MovingAgents, 1, 1) - 0.01*boundary_check(MovingAgents, 1, -1);
+    u_b(:,2) = u_b(:,2) - 0.01*boundary_check(MovingAgents, 2, -1) + 0.01*boundary_check(MovingAgents, 2, 1);
 
     % collision check
     for i=1:S        
@@ -110,7 +111,7 @@ while k <= k_max
             if ExplorationFlag(i)
                 u_c(i,:) = min(max(u_c(i,:), -0.1), 0.1);
             else
-                u_c(i,:) = min(max(u_c(i,:), -0.005), 0.005);
+                u_c(i,:) = min(max(u_c(i,:), -0.003), 0.003);
             end
         end        
     end
@@ -127,12 +128,14 @@ while k <= k_max
             clear phi tmp Pi_E
             phi = Find_Eigenfunctions_by_LUT(MovingAgents(n,:),E);          
             tmp = phi' * phi;
-            if k<570
+            if update(n) % It cannot be updated too densely because the accuracy of LUT is not high enough
                 alpha(n,:) = (m-1)/m * alpha(n,:) + 1/m * tmp(:)';
                 beta(n,:) = (m-1)/m * beta(n,:) + 1/m * (phi' * y_s(n))'; 
-            elseif ~reachGoal(n)
-                alpha(n,:) = (m + 5*floor((k - 570)/30)-1)/(m + 5*floor((k - 570)/30)) * alpha(n,:) + 1/(m + 5*floor((k - 570)/30)) * tmp(:)';
-                beta(n,:) = (m + 5*floor((k - 570)/30)-1)/(m + 5*floor((k - 570)/30)) * beta(n,:) + 1/(m + 5*floor((k - 570)/30)) * (phi' * y_s(n))';
+%             else
+%                 beta(n,:) = (m-1)/m * beta(n,:) + 1/m * (phi' * y_s(n))';
+%             elseif ~reachGoal(n)
+%                 alpha(n,:) = (m + 5*floor((k - 570)/30)-1)/(m + 5*floor((k - 570)/30)) * alpha(n,:) + 1/(m + 5*floor((k - 570)/30)) * tmp(:)';
+%                 beta(n,:) = (m + 5*floor((k - 570)/30)-1)/(m + 5*floor((k - 570)/30)) * beta(n,:) + 1/(m + 5*floor((k - 570)/30)) * (phi' * y_s(n))';
             end
 %             alpha(n,:) = alpha(n,:) + tmp(:)';
 %             beta(n,:) = beta(n,:) + (phi' * y_s(n))';
@@ -141,12 +144,12 @@ while k <= k_max
             if ExplorationFlag(n)                
                 Pi_E = K - PHI * pinv(reshape(alpha(n,:),E,E)+sigma^2/S^2*pinv(LAMBDA)) * reshape(alpha(n,:),E,E)*LAMBDA*PHI';
                 [goto_x,goto_y,ExplorationFlag(n),~] = findMaxEdge(MovingAgents(n,:),reshape(diag(Pi_E),a,a),1);
-                v(n,:) = 0.03 * [goto_x,goto_y];
+                v(n,:) = 0.2 * [goto_x,goto_y]/SensingPeriod;
                  
             else
                 f_E = PHI * pinv(reshape(alpha(n,:),E,E)+sigma^2/S^2*pinv(LAMBDA)) * beta(n,:)';
                 [goto_x,goto_y,~,reach] = findMaxEdge(MovingAgents(n,:),reshape(f_E,a,a),0);
-                v(n,:) = 0.03 * [goto_x,goto_y];
+                v(n,:) = 0.16 * [goto_x,goto_y]/SensingPeriod;
                 if reach
                     reachGoal(n) = reach;
                 end                
@@ -168,8 +171,12 @@ while k <= k_max
             clear f_E            
             shading flat            
             Pi_E = K - PHI * pinv(reshape(alpha(n,:),E,E)+sigma^2/S^2*pinv(LAMBDA)) * reshape(alpha(n,:),E,E)*LAMBDA*PHI'; 
+            Pi_E = diag(Pi_E);
+            if sum(Pi_E(:)) < 70000
+                update(n) = 0;
+            end
             subplot(4,S,3*S+n);
-            pcolor(tmp_xx,tmp_yy,reshape(diag(Pi_E),a,a));            
+            pcolor(tmp_xx,tmp_yy,reshape(Pi_E,a,a));            
             shading flat            
             clear Pi_E
             
@@ -181,10 +188,12 @@ while k <= k_max
             subplot(4, S, 2*S+n); 
             text(0.5, 3.7, labels{n}, 'FontSize', 6, 'HorizontalAlignment', 'center', 'VerticalAlignment', 'bottom');
             subplot(4, S, 3*S+n)
-            if ExplorationFlag(n) == 1
+            if ExplorationFlag(n)
                 text(0.5, -7, 'explorating...', 'Color', 'red', 'FontSize', 7, 'HorizontalAlignment', 'center', 'VerticalAlignment', 'middle');
+            elseif ~reachGoal(n)
+                text(0.5, -7, 'goal targeting...', 'Color', 'blue', 'FontSize', 7, 'HorizontalAlignment', 'center', 'VerticalAlignment', 'middle');
             else
-                text(0.5, -7, 'exploitation', 'Color', 'blue', 'FontSize', 7, 'HorizontalAlignment', 'center', 'VerticalAlignment', 'middle');
+                text(0.5, -7, 'reached goal', 'Color', 'black', 'FontSize', 7, 'HorizontalAlignment', 'center', 'VerticalAlignment', 'middle');
             end
             
             
@@ -194,6 +203,7 @@ while k <= k_max
     end
     
     % update alpha and beta through communication
+    tran(~update, :) = 0;
     alpha = alpha - gamma*tran*alpha;
     beta = beta - gamma*tran*beta;    
     
@@ -210,14 +220,16 @@ while k <= k_max
 %     disp(v(q,:));
 %     MovingAgents = MovingAgents + (~reachGoal' .* v);
 %     MovingAgents = MovingAgents + (reachGoal>0)'.* v * 0.25;
-    MovingAgents = MovingAgents + v;
-    MovingAgents = MovingAgents + (reachGoal' .* v)*1/5;
-%     MovingAgents = MovingAgents + v;
+%     MovingAgents = MovingAgents + ~reachGoal' .* v;
+%     MovingAgents = MovingAgents + (reachGoal' .* v)*1/2;
+    MovingAgents = MovingAgents + (ExplorationFlag' .* v);
+    MovingAgents = MovingAgents + ((~ExplorationFlag& ~reachGoal)' .* v)*1/2;
+    MovingAgents = MovingAgents + (reachGoal' .* v)*1/3;
 %     steps = steps - 1;
 %     reachGoal = reachGoal + (steps == 0);
     
 %     disp(ExplorationFlag)
-    disp(reachGoal)
+    disp(update)
 %     disp(steps)
 %     disp('MovingAgents')
 %     disp(MovingAgents(q,:))

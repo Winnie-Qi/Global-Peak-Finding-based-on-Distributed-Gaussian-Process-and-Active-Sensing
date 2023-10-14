@@ -4,14 +4,24 @@ global InputSpace_LUT;
 ExplorationFlag = 1;
 reachGoal = 0;
 m = 1;
-M = 9;
+M = 11;
 a = size(f,1);
 [~, index_x] = min(abs(MovingAgent(1) - InputSpace_LUT{1})); 
 [~, index_y] = min(abs(MovingAgent(2) - InputSpace_LUT{2}));
 
 if Exploration
-    L = 2; % side length 21    
-    while true        
+    disp(sum(f(:)))
+%     if (sum(f(:))<70000
+%     end
+    L = 10; % side length 21    
+    while true
+        
+%         if sum(f(:))<73000
+%             goto_x=0; goto_y=0;
+%             ExplorationFlag = 0;
+%             break
+%         end
+        
         % Calculates the start and end positions of the window
         start_x = max(index_x-L, 1);
         end_x = min(index_x+L, a);
@@ -31,21 +41,21 @@ if Exploration
             if s == 0
                 goto_x = 1; goto_y = 1;
                 m = 1;
-            else
-                goto_x = goto_x/s * m;
-                goto_y = goto_y/s * m;
+%             else
+%                 goto_x = goto_x/s * m;
+%                 goto_y = goto_y/s * m;
             end
             break
         else
-            if L > 7
+            if L > 20 || sum(f(:))<70000
                 goto_x=0; goto_y=0;
                 ExplorationFlag = 0;
                 break
             end
         end
         L = L+1;
-        m = m + 1;
-        M = M - 0.5;        
+        m = m + 0.2;
+        M = M - 0.1;        
     end
 else
     [~, max_index] = max(f(:));
@@ -58,9 +68,9 @@ else
     s = sqrt(goto_x^2 + goto_y^2);
     if s == 0
         goto_x = 1; goto_y = 1;        
-    else
-        goto_x = goto_x/s;
-        goto_y = goto_y/s;
+%     else
+%         goto_x = goto_x/s;
+%         goto_y = goto_y/s;        
     end
     if s < 12
         reachGoal = 1;

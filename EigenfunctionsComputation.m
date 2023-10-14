@@ -7,8 +7,8 @@ close all;
 clear all;
 
 % The parameters here can be modified by the users
-InputSpace = {linspace(-4, 4, 100); linspace(-4, 4, 100)}; % please change line73 if you modify InputSpace
-PercentageOfVarianceToBeCaptured = 0.96;
+InputSpace = {linspace(-4, 4, 200); linspace(-4, 4, 200)}; % please change line73 if you modify InputSpace
+PercentageOfVarianceToBeCaptured = 0.45;
 v=0.001;
 l=0.001;
 
@@ -70,6 +70,6 @@ Eigenfunctions = Orthogonalize(Eigenfunctions,n_input,2); % Orthonormalize the e
 
 % Create results directory
 mkdir('mat');
-strFilePath = fullfile('mat', sprintf('InputSpace_(-4,4,100)_E_%d.mat',E));
+strFilePath = fullfile('mat', sprintf('InputSpace_(-4,4,200)_E_%d.mat',E));
 save(strFilePath,'InputSpace','Eigenfunctions','Eigenvalues');
 fprintf('\nThe mat-file containing the Eigenfunctions and Eigenvalues has been saved in:\n %s\n',strFilePath );
