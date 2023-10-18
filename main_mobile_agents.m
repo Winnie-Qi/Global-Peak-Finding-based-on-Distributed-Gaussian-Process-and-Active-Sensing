@@ -198,6 +198,7 @@ while k <= k_max
             
             
             pause(0.05);
+            
         end
 
     end

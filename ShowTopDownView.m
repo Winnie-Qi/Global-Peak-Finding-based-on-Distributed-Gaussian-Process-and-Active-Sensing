@@ -7,6 +7,6 @@ h2 = pcolor(x,y,z);
 h2.EdgeColor = 'none';
 title('Top down view');
 colorbar
+pause(0.01);
 hold on
-end
 

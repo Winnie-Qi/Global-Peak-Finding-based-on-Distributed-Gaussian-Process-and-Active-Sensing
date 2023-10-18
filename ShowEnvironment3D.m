@@ -7,4 +7,5 @@ title('3D Environmet');
 xlim([-4 4]);
 ylim([-4 4]);
 zlim([-12.5 20]);
+pause(0.01);
 hold on
