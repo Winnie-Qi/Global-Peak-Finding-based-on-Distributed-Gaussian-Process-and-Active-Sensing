@@ -34,7 +34,7 @@ If you want to observe how information is updated and transferred between agents
 <center>	
    <img src="https://github.com/Winnie-Qi/Global-Peak-Finding-based-on-Distributed-Gaussian-Process-and-Active-Sensing/blob/main/mat/pic2.jpg"
          alt="pic2.jpg"
-         width="80%"/>
+         width="100%"/>
 </center>
 
 <center>	
