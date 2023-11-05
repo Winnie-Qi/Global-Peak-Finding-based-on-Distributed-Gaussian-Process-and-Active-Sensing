@@ -3,14 +3,14 @@ function [goto_x,goto_y,ExplorationFlag,reachGoal] = findMaxEdge(MovingAgent,f,E
 global InputSpace_LUT;
 ExplorationFlag = 1;
 reachGoal = 0;
-m = 1;
+mul = 1;
 M = 11;
 a = size(f,1);
 [~, index_x] = min(abs(MovingAgent(1) - InputSpace_LUT{1})); 
 [~, index_y] = min(abs(MovingAgent(2) - InputSpace_LUT{2}));
 
 if Exploration
-    disp(sum(f(:)))
+%     disp(sum(f(:)))
 %     if (sum(f(:))<70000
 %     end
     L = 10; % side length 21    
@@ -40,7 +40,7 @@ if Exploration
             s = sqrt(goto_x^2 + goto_y^2);
             if s == 0
                 goto_x = 1; goto_y = 1;
-                m = 1;
+                mul = 1;
 %             else
 %                 goto_x = goto_x/s * m;
 %                 goto_y = goto_y/s * m;
@@ -54,7 +54,7 @@ if Exploration
             end
         end
         L = L+1;
-        m = m + 0.2;
+        mul = mul + 0.2;
         M = M - 0.1;        
     end
 else

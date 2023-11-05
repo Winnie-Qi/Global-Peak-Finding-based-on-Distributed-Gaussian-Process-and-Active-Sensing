@@ -230,7 +230,7 @@ while k <= k_max
 %     reachGoal = reachGoal + (steps == 0);
     
 %     disp(ExplorationFlag)
-    disp(update)
+%     disp(update)
 %     disp(steps)
 %     disp('MovingAgents')
 %     disp(MovingAgents(q,:))

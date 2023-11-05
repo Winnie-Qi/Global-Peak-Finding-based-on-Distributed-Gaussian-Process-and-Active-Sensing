@@ -22,12 +22,26 @@ The system is designed to be distributed, where agents can only communicate with
 
 To run this project, please execute the *main_mobile_agents.m* file. You have the flexibility to modify the number of agents and the random seed to change the starting positions of the agents.
 
-图（main_mobile_agents.m）
+<center>	
+   <img src="https://github.com/Winnie-Qi/Global-Peak-Finding-based-on-Distributed-Gaussian-Process-and-Active-Sensing/blob/main/mat/pic1.jpg"
+         alt="pic1.jpg"
+         width="60%"/>
+</center>
+
+*main_mobile_agents.m*
 
 If you want to observe how information is updated and transferred between agents, please execute the *main_stationary_sensors.m* file. This script demonstrates the updating and transfer of information between stationary sensors. You can modify the density or the communication radius of the agents and choose which agent's results will be displayed.
 
-图
+<center>	
+   <img src="https://github.com/Winnie-Qi/Global-Peak-Finding-based-on-Distributed-Gaussian-Process-and-Active-Sensing/blob/main/mat/pic2.jpg"
+         alt="pic2.jpg"
+         width="80%"/>
+</center>
 
-图（main_stationary_sensors.m）
+<center>	
+   <img src="https://github.com/Winnie-Qi/Global-Peak-Finding-based-on-Distributed-Gaussian-Process-and-Active-Sensing/blob/main/mat/pic3.jpg"
+         alt="pic3.jpg"
+         width="60%"/>
+</center>
 
-仓库具体的结构如下：
+*main_stationary_sensors.m*

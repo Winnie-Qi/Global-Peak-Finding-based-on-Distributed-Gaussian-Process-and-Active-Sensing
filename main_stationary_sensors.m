@@ -7,14 +7,17 @@ close all;
 clear all;
 
 % The parameters here can be modified by the users
+S = 10; % The number of stationary sensors is S*S£¬corresponds to traing points density
+SHOW = 10;
+% SHOW = 65; % show the result of the Sth sensor
 
+% hyperparameters
 S = 10; % The number of stationary sensors is S*S£¬corresponds to traing points density
 r = 1.0; % The range of communication with surrounding sensors
 a = 100; % test points density
 E = 100;
 sigma = 0.0001;
 M = 20; % iteration times
-SHOW = 10; % show the result of the Sth sensor
 gamma = 0.7;
 v = 0.01;
 l = 0.01;
@@ -26,8 +29,7 @@ InputSpace_test = {linspace(-4, 4, a); linspace(-4, 4, a)};
 % subplot(4,S,[1,2,3,1+S,2+S,3+S]);
 subplot(4,20,[1,2,3,4,5,6,7,21,22,23,24,25,26,27]);
 ShowEnvironment3D(InputSpace_test);
-% subplot(4,20,[9,10,11,12,13,14,15,16,17,18,19,20,29,30,31,32,33,34,35,36,37,38,39,40]);
-figure(2)
+subplot(4,20,[9,10,11,12,13,14,15,16,17,18,19,20,29,30,31,32,33,34,35,36,37,38,39,40]);
 ShowTopDownView(InputSpace_test);
 
 % Load pre-computed LUT 
