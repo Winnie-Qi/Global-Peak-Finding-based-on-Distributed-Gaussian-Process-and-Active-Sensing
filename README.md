@@ -9,7 +9,9 @@ We implemented the solution for multiple robots working together to explore an u
          alt="gif1.gif"
          width="60%"/>
 </center>
+
 *The GIF has been sped up for smoother display*
+
 The system is designed to be distributed, where agents can only communicate with each other within a certain distance. Throughout the process, collision avoidance between agents and prevention of crossing map boundaries are taken into consideration.
 
 <center>	
