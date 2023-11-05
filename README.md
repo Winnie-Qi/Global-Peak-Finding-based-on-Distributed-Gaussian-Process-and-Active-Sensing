@@ -27,8 +27,6 @@ To run this project, please execute the *main_mobile_agents.m* file. You have th
          width="60%"/>
 </center>
 
-*main_mobile_agents.m*
-
 If you want to observe how information is updated and transferred between agents, please execute the *main_stationary_sensors.m* file. This script demonstrates the updating and transfer of information between stationary sensors. You can modify the density or the communication radius of the agents and choose which agent's results will be displayed.
 
 <center>	
@@ -42,5 +40,3 @@ If you want to observe how information is updated and transferred between agents
          alt="pic3.jpg"
          width="60%"/>
 </center>
-
-*main_stationary_sensors.m*
